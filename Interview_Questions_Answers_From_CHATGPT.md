@@ -1,3 +1,5 @@
+### 🔹 Question 1
+
 Absolutely! Here's a simple **PyTorch example** demonstrating how to use `softmax` for a classification task.
 
 ---
@@ -70,6 +72,7 @@ Gradients on input x: tensor([...])
 Let me know if you want this extended into a full training loop or with a real dataset (like MNIST)!
 
 
+### 🔹 Question 2
 
 That's an **excellent observation**, and it's a very common question!
 
