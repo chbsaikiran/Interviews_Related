@@ -1730,3 +1730,195 @@ Processes conditional compilation (#if, #ifdef, #ifndef)
 
 Can remove comments
 
+
+################################################################################################################################
+################################################################################################################################
+################################################################################################################################
+################################################################################################################################
+
+you have used unknwingly the same function declaration in 2 header files, and both are included in a 
+
+Ah, I see where you’re going 👍 Let’s carefully go through this.
+
+---
+
+### Case: Same function **declaration** in 2 headers
+
+Example:
+
+```c
+// file1.h
+void foo(void);
+
+// file2.h
+void foo(void);
+```
+
+And in your `.c` file:
+
+```c
+#include "file1.h"
+#include "file2.h"
+
+int main() {
+    foo();
+}
+```
+
+✅ This will **not cause a compilation error**, because both are **declarations only** (not definitions), and they are identical.
+The compiler just sees multiple consistent declarations of `foo()`, which is allowed.
+
+---
+
+### Case: Same function **definition** in 2 headers
+
+If you did:
+
+```c
+// file1.h
+void foo(void) { printf("file1\n"); }
+
+// file2.h
+void foo(void) { printf("file2\n"); }
+```
+
+And included both:
+
+```c
+#include "file1.h"
+#include "file2.h"
+```
+
+❌ This **will cause multiple definition errors at link time**, because the linker will see two separate functions with the same name.
+
+---
+
+### How to Avoid This Problem
+
+1. **Use `extern` declaration in headers**:
+
+   * Headers should only have **declarations** like:
+
+   ```c
+   // myfunc.h
+   void foo(void);
+   ```
+
+   * The actual definition should be in **one** `.c` file:
+
+   ```c
+   // myfunc.c
+   #include "myfunc.h"
+   void foo(void) { printf("Hello\n"); }
+   ```
+
+2. **Use include guards or `#pragma once`** in headers:
+
+   ```c
+   #ifndef FILE1_H
+   #define FILE1_H
+   void foo(void);
+   #endif
+   ```
+
+3. **Never put function definitions in headers** (unless `static inline`).
+
+---
+
+👉 So, if you unknowingly had the same **function declaration** in two header files and included both, it’s **fine**.
+But if you had the **definition** in both, you’ll get **multiple definition errors at link time**.
+
+---
+
+Do you want me to also explain what happens if the declarations are **slightly different** (like one says `int foo()` and the other says `int foo(void)`)?
+
+################################################################################################################################
+################################################################################################################################
+################################################################################################################################
+################################################################################################################################
+
+if I define a static function in .h file then memory will be allocated in each C file it is added
+
+Yes, exactly 👍 — that’s an important subtlety in C. Let me explain clearly.
+
+---
+
+### What happens if you put a `static` function in a **header file**
+
+Example:
+
+```c
+// myheader.h
+static void helper() {
+    printf("Helper function\n");
+}
+```
+
+And then:
+
+```c
+// file1.c
+#include "myheader.h"
+
+// file2.c
+#include "myheader.h"
+```
+
+---
+
+### Behavior
+
+1. **`static` at function scope** in C means:
+
+   * The function has **internal linkage** (its symbol is visible only in that `.c` file).
+
+2. When you include the header in multiple `.c` files:
+
+   * The compiler **copies** the static function definition into **each translation unit**.
+   * Each `.c` file gets its **own private copy** of `helper()`.
+   * The linker does not complain, because each copy has a different internal symbol (not globally visible).
+
+3. **Memory implications**:
+
+   * Yes, code space is duplicated → every `.c` file including that header gets a separate copy of the function in the final binary.
+   * That means extra memory is consumed unnecessarily.
+
+---
+
+### Correct practice
+
+* Normally, header files should only contain **declarations** (not function definitions), unless:
+
+  * The function is `static inline` (compiler may inline and avoid duplication).
+
+✅ Better option:
+
+```c
+// myheader.h
+static inline void helper() {
+    printf("Helper function\n");
+}
+```
+
+* With `inline`, the compiler can inline the function at call sites, or keep just one copy per `.c` file if needed.
+* This avoids wasting memory for small utility functions.
+
+---
+
+### Summary
+
+* `static` function in header = **multiple private copies** in each `.c` file that includes it.
+* This consumes more memory.
+* Best practice:
+
+  * Use **declaration in header + definition in one `.c` file**, OR
+  * Use `static inline` in header for small helper functions.
+
+---
+
+Do you want me to show you with a **compiled example (objdump/nm)** how the same static function gets emitted into both `.o` files?
+
+################################################################################################################################
+################################################################################################################################
+################################################################################################################################
+################################################################################################################################
