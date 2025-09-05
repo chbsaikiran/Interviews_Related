@@ -1922,3 +1922,67 @@ Do you want me to show you with a **compiled example (objdump/nm)** how the same
 ################################################################################################################################
 ################################################################################################################################
 ################################################################################################################################
+
+Got it 👍 Since this AMD role mixes **embedded testing, automation, device drivers, and multimedia (audio/power/performance)**, they’ll likely test both your **hands-on debugging/testing ability** and your **understanding of embedded systems/software lifecycle**.
+
+Here are **10 strong interview questions** (with hints on how to approach them):
+
+---
+
+### **Technical / Hands-On**
+
+1. **How do you debug an issue in an embedded system where the device driver loads but the device does not function properly?**
+   👉 Talk about logs (dmesg, kernel logs), using debug prints, register dumps, stepwise isolation (firmware, driver init, communication buses like I2C/SPI/PCIe), and test utilities.
+
+2. **What is the difference between functional, regression, integration, and system testing in an embedded environment? Can you give real-world examples?**
+   👉 Map to hardware/software:
+
+* *Functional*: test API calls or driver functionality.
+* *Regression*: re-run tests after a patch to ensure nothing is broken.
+* *Integration*: testing firmware + driver + middleware together.
+* *System*: full end-to-end use case (e.g., audio playback with performance measurements).
+
+3. **How would you design an automation framework for testing Windows device drivers?**
+   👉 Mention Python/PowerShell + Jenkins/GitLab CI + automated driver install/uninstall + stress/performance scripts + integration with bug tracking (JIRA).
+
+4. **You are testing an audio driver, and during playback, you hear glitches. How would you approach debugging and root cause identification?**
+   👉 Think buffers, DMA underrun, ISR delays, CPU load, power state transitions, sample rate mismatches, driver logs.
+
+5. **What’s the difference between BIOS, firmware, RTOS, and device drivers? How do they interact in a typical embedded system?**
+   👉 BIOS initializes hardware → firmware controls device behavior → RTOS schedules tasks → driver is the software interface OS ↔ hardware.
+
+---
+
+### **Testing & Automation**
+
+6. **How do you ensure test coverage when writing test cases for embedded systems?**
+   👉 Mention requirement-based testing, equivalence partitioning, boundary testing, stress/performance scenarios, negative testing.
+
+7. **How would you use Jenkins or GitLab CI for embedded automation?**
+   👉 Pipelines: build driver → flash/boot test device → run Python/Shell scripts for functional testing → collect logs → publish results → trigger regression on code changes.
+
+8. **What bug tracking process have you followed in JIRA? Can you describe defect lifecycle with an example from embedded testing?**
+   👉 Example: Found defect → raised in JIRA → triaged → assigned → developer fix → retest → regression → closure.
+
+---
+
+### **Debugging & Performance**
+
+9. **How do you measure power and performance for multimedia use cases (e.g., audio/video playback)?**
+   👉 Tools like perf, Windows ETW, custom scripts for CPU/GPU utilization, oscilloscope/power measurement devices, profiling driver overhead, sleep states.
+
+10. **Imagine you encounter an intermittent system crash while running long regression tests. How would you go about root-causing it?**
+    👉 Mention: collect crash dumps/logs, enable kernel debug, bisect test cases, reproduce consistently, look for memory leaks, timing issues, race conditions.
+
+---
+
+⚡️ Extra prep tips:
+
+* Review **Windows Device Driver testing (WDTF, WHQL, HCK)**.
+* Be clear on **embedded debugging tools** (JTAG, serial console, logs).
+* Brush up on **audio pipelines** (buffers, DMA, codecs).
+* Expect at least 1-2 **scenario-based debugging questions**.
+
+---
+
+Do you want me to also prepare **model answers (short bullet-style)** for these 10 questions so you can practice like a mock interview?
